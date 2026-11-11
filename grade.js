@@ -1,0 +1,215 @@
+/* 채점 — 화면과 상관없는 순수 함수만 둔다 (node 테스트에서도 불러 쓴다) */
+(function (root) {
+  'use strict';
+
+  // ── 축약형 풀기 ──
+  const NT = { "can't": ['can', 'not'], "won't": ['will', 'not'], "shan't": ['shall', 'not'], "ain't": ['am', 'not'] };
+  const S_IS = new Set(['it', 'he', 'she', 'that', 'what', 'there', 'here', 'where', 'who', 'how', 'everything',
+    'nothing', 'something', 'someone', 'everyone', 'this', 'when', 'why']);
+  const NUM = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven',
+    'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+  const D_TOKEN = "'d";   // would / had 둘 다 될 수 있음
+  const S_TOKEN = "'s";   // is / has 둘 다 될 수 있음
+
+  function expandWord(w) {
+    // w: 소문자, 따옴표 통일, 문장부호 제거된 단어 하나
+    if (!w) return [];
+    if (NT[w]) return NT[w].slice();
+    if (w === 'cannot') return ['can', 'not'];
+    if (w === "let's") return ['let', 'us'];
+    if (/^\d+$/.test(w)) { const n = +w; return [n <= 20 ? NUM[n] : w]; }
+    let m;
+    if ((m = w.match(/^(.+)n't$/))) return [m[1], 'not'];
+    if ((m = w.match(/^(.+)'m$/))) return [m[1], 'am'];
+    if ((m = w.match(/^(.+)'re$/))) return [m[1], 'are'];
+    if ((m = w.match(/^(.+)'ve$/))) return [m[1], 'have'];
+    if ((m = w.match(/^(.+)'ll$/))) return [m[1], 'will'];
+    if ((m = w.match(/^(.+)'d$/))) return [m[1], D_TOKEN];
+    if ((m = w.match(/^(.+)'s$/)) && S_IS.has(m[1])) return [m[1], S_TOKEN];
+    return [w];
+  }
+
+  function cleanWord(raw) {
+    return raw.toLowerCase()
+      .replace(/[‘’ʼ`´]/g, "'")
+      .replace(/(\d),(\d)/g, '$1$2')
+      .replace(/[^a-z0-9']+/g, '')
+      .replace(/^'+|'+$/g, '');
+  }
+
+  // 화면에 보일 단어 목록과, 각 단어가 풀린 비교용 토큰들
+  function tokenize(text) {
+    const words = [];
+    const toks = [];
+    String(text || '').split(/\s+/).filter(Boolean).forEach(raw => {
+      const w = { disp: raw, toks: [] };
+      raw.split(/[-–—/&]+/).forEach(part => {
+        expandWord(cleanWord(part)).forEach(t => { w.toks.push(toks.length); toks.push({ t, word: words.length }); });
+      });
+      words.push(w);
+    });
+    return { words, toks };
+  }
+
+  // 원문을 그대로(하이픈 포함) 단어로 나눠 표시용으로 쓴다
+  function displayWords(text) {
+    return String(text || '').split(/\s+/).filter(Boolean);
+  }
+
+  function tokEq(a, b) {
+    if (a === b) return true;
+    if (a === D_TOKEN) return b === 'would' || b === 'had';
+    if (b === D_TOKEN) return a === 'would' || a === 'had';
+    if (a === S_TOKEN) return b === 'is' || b === 'has';
+    if (b === S_TOKEN) return a === 'is' || a === 'has';
+    return false;
+  }
+
+  // 철자 거리 (이웃 글자 자리바꿈도 1번으로 센다: teh → the)
+  function charDist(a, b) {
+    const m = a.length, n = b.length;
+    const D = [];
+    for (let i = 0; i <= m; i++) { D.push(new Array(n + 1).fill(0)); D[i][0] = i; }
+    for (let j = 0; j <= n; j++) D[0][j] = j;
+    for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) {
+      D[i][j] = Math.min(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) D[i][j] = Math.min(D[i][j], D[i - 2][j - 2] + 1);
+    }
+    return D[m][n];
+  }
+
+  // 단수·복수, 동사 어미만 다른 경우 (log/logs, review/reviewed, make/making)
+  const SUF = [['ies', 'y'], ['ied', 'y'], ['ing', ''], ['ing', 'e'], ['ed', ''], ['ed', 'e'], ['es', ''], ['s', ''], ['d', ''], ['er', ''], ['ly', '']];
+  function stems(w) {
+    const out = new Set([w, w.replace(/e$/, '')]);
+    SUF.forEach(([suf, add]) => { if (w.length > suf.length + 1 && w.endsWith(suf)) out.add(w.slice(0, -suf.length) + add); });
+    return out;
+  }
+  function isInflection(a, b) {
+    if (a === b) return false;
+    const sa = stems(a);
+    for (const x of stems(b)) if (sa.has(x)) return true;
+    return false;
+  }
+
+  function isSpellingPair(typed, right) {
+    if (!typed || !right) return false;
+    if (typed.includes("'") !== right.includes("'") && typed.replace(/'/g, '') === right.replace(/'/g, '')) return true;
+    if (isInflection(typed, right)) return false;
+    const d = charDist(typed, right);
+    return d <= Math.max(1, right.length / 3);
+  }
+
+  // 단어 단위 정렬: 정답(exp) ↔ 내 답(got)
+  function align(exp, got) {
+    const m = exp.length, n = got.length;
+    const C = [];
+    for (let i = 0; i <= m; i++) { C.push(new Array(n + 1).fill(0)); C[i][0] = i; }
+    for (let j = 0; j <= n; j++) C[0][j] = j;
+    const subCost = (a, b) => tokEq(a, b) ? 0 : (isSpellingPair(b, a) ? 0.6 : 1);
+    for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) {
+      C[i][j] = Math.min(C[i - 1][j] + 1, C[i][j - 1] + 1, C[i - 1][j - 1] + subCost(exp[i - 1], got[j - 1]));
+    }
+    const ops = [];
+    let i = m, j = n;
+    while (i > 0 || j > 0) {
+      if (i > 0 && j > 0 && C[i][j] === C[i - 1][j - 1] + subCost(exp[i - 1], got[j - 1])) {
+        ops.push({ op: tokEq(exp[i - 1], got[j - 1]) ? 'ok' : 'sub', e: i - 1, g: j - 1 }); i--; j--;
+      } else if (i > 0 && C[i][j] === C[i - 1][j] + 1) {
+        ops.push({ op: 'del', e: i - 1 }); i--;          // 정답에 있는데 안 씀
+      } else {
+        ops.push({ op: 'ins', g: j - 1 }); j--;          // 정답에 없는데 씀
+      }
+    }
+    return ops.reverse();
+  }
+
+  /**
+   * 채점
+   * @param {string} input   내 답
+   * @param {string} answer  정답 (영어)
+   * @param {string[]} alts  같이 인정하는 다른 정답들
+   * @returns {{correct, kind, spell, userMarks, answerMarks, matched}}
+   *   kind: null | 'spell' | 'struct'
+   *   spell: [{wrong, right}]
+   *   userMarks / answerMarks: 표시용 단어별 표시 (true = 취소선 / 주황 배경)
+   */
+  function grade(input, answer, alts) {
+    const cands = [answer].concat(alts || []).filter(Boolean);
+    let best = null;
+    for (const c of cands) {
+      const r = gradeOne(input, c);
+      r.matched = c;
+      if (r.correct) return r;
+      if (!best || r.cost < best.cost) best = r;
+    }
+    // 다른 정답보다 원래 정답과 비교한 결과를 보여주는 게 자연스럽다 (차이가 크지 않으면)
+    const main = gradeOne(input, answer); main.matched = answer;
+    return main.cost <= best.cost + 0.5 ? main : best;
+  }
+
+  function gradeOne(input, answer) {
+    const E = tokenize(answer), G = tokenize(input);
+    const et = E.toks.map(x => x.t), gt = G.toks.map(x => x.t);
+    const ops = align(et, gt);
+    const userMarks = G.words.map(() => false), answerMarks = E.words.map(() => false);
+    let cost = 0;
+    const bad = ops.filter(o => o.op !== 'ok');
+    bad.forEach(o => {
+      cost += 1;
+      if (o.e !== undefined) answerMarks[E.toks[o.e].word] = true;
+      if (o.g !== undefined) userMarks[G.toks[o.g].word] = true;
+    });
+    const pair = o => ({ wrong: cleanWord(G.words[G.toks[o.g].word].disp), right: cleanWord(E.words[E.toks[o.e].word].disp) });
+    const res = { correct: bad.length === 0 && gt.length > 0, kind: null, spell: [], userMarks, answerMarks, cost,
+      // 사용자가 직접 '스펠링'으로 바꿀 때 쓸, 바뀐 단어 쌍 전부
+      subs: bad.filter(o => o.op === 'sub').map(pair),
+      answerWords: E.words.map(w => w.disp), userWords: G.words.map(w => w.disp) };
+    if (res.correct) return res;
+    if (gt.length === 0) { res.kind = 'struct'; return res; }
+
+    // 띄어쓰기만 다른 경우 (every day / everyday) → 스펠링
+    const joinE = et.join(''), joinG = gt.join('');
+    if (joinE === joinG) {
+      res.kind = 'spell';
+      res.spell = mergePairs(bad, E, G);
+      return res;
+    }
+    const allSpell = bad.length > 0 && bad.every(o => o.op === 'sub' && isSpellingPair(gt[o.g], et[o.e]));
+    res.kind = allSpell ? 'spell' : 'struct';
+    res.spell = bad.filter(o => o.op === 'sub' && isSpellingPair(gt[o.g], et[o.e])).map(pair);
+    return res;
+  }
+
+  function mergePairs(bad, E, G) {
+    const wrong = [...new Set(bad.filter(o => o.g !== undefined).map(o => G.toks[o.g].word))].map(i => cleanWord(G.words[i].disp));
+    const right = [...new Set(bad.filter(o => o.e !== undefined).map(o => E.toks[o.e].word))].map(i => cleanWord(E.words[i].disp));
+    return wrong.length && right.length ? [{ wrong: wrong.join(' '), right: right.join(' ') }] : [];
+  }
+
+  // 힌트: 1단계 = 단어 첫 글자만, 2단계 = 앞쪽 절반 공개
+  function hint(answer, level) {
+    const words = displayWords(answer);
+    const mask = w => {
+      let seen = false, afterApos = false;
+      return w.replace(/[A-Za-z0-9'’]/g, ch => {
+        if (ch === "'" || ch === '’') { afterApos = true; return ch; }
+        if (!seen) { seen = true; return ch; }
+        return afterApos ? ch : '_';
+      });
+    };
+    if (level <= 1) return words.map(mask).join(' ');
+    const half = Math.ceil(words.length / 2);
+    return words.map((w, i) => i < half ? w : mask(w)).join(' ');
+  }
+
+  // 같은 답인지 (중복 확인·다른 정답 저장용)
+  function sameText(a, b) {
+    const x = tokenize(a).toks.map(t => t.t), y = tokenize(b).toks.map(t => t.t);
+    return x.length === y.length && x.every((t, i) => tokEq(t, y[i]));
+  }
+
+  const API = { grade, hint, tokenize, sameText, isSpellingPair, isInflection, charDist, displayWords };
+  if (typeof module !== 'undefined' && module.exports) module.exports = API;
+  else root.Grade = API;
+})(typeof window !== 'undefined' ? window : globalThis);
