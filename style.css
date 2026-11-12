@@ -17,6 +17,10 @@ html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: va
 body { padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); -webkit-tap-highlight-color: transparent; }
 a { color: var(--accent); }
 button, input, select, textarea { font: inherit; color: inherit; }
+/* 아이폰: 버튼을 길게 눌러도 복사 메뉴가 뜨지 않게 (🔊 길게 누르기용) */
+button { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+/* 아이폰: 글자 크기 16px 미만 입력칸은 누를 때 화면이 확대되므로 16px 이상 유지 */
+input, select, textarea { font-size: max(16px, 1em); }
 [hidden] { display: none !important; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -54,7 +58,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .opts { display: inline-flex; align-items: center; gap: 10px; }
 .toggle { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
 .toggle input { accent-color: var(--accent); margin: 0; }
-select { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; font-size: 13px; }
+select { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 1px 2px; font-size: 16px; }
 
 /* 카드 */
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 18px 16px; min-height: 280px;
