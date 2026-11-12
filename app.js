@@ -577,10 +577,22 @@
 
   // ── 시작 ──
   async function load() {
+    const seed = window.SEED || [];
     let list = await Store.allSentences();
     if (!list.length) {
-      list = (window.SEED || []).map(s => Logic.newRecord(s, s.order));
+      list = seed.map(s => Logic.newRecord(s, s.order));
       await Store.putSentences(list);
+      await Store.setMeta('seedIds', seed.map(s => s.id));
+    } else {
+      // 앱 업데이트로 기본 문장이 늘었으면 새 것만 더한다 (지운 문장은 되살리지 않음, 같은 영어 문장은 건너뜀)
+      const given = new Set(await Store.getMeta('seedIds', null) || seed.filter(s => +s.id.slice(1) < 910).map(s => s.id));
+      if (seed.some(s => !given.has(s.id))) {
+        const ids = new Set(list.map(r => r.id)), have = new Set(list.map(r => Logic.enKey(r.en)));
+        const add = seed.filter(s => !given.has(s.id) && !ids.has(s.id) && !have.has(Logic.enKey(s.en)))
+          .map(s => Logic.newRecord(s, s.order));
+        if (add.length) { await Store.putSentences(add); list = list.concat(add); }
+        await Store.setMeta('seedIds', seed.map(s => s.id));
+      }
     }
     recs.clear(); list.forEach(r => recs.set(r.id, r));
     settings = Object.assign(settings, await Store.getMeta('settings', {}));
