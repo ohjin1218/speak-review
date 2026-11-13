@@ -607,6 +607,19 @@
         if (add.length) { await Store.putSentences(add); list = list.concat(add); }
         await Store.setMeta('seedIds', seed.map(s => s.id));
       }
+      // 기본 문장의 뜻풀이·분류가 고쳐졌으면 가져온다 (맞힌 횟수·다시 볼 것 기록은 그대로)
+      const byId = new Map(list.map(r => [r.id, r]));
+      const edited = [];
+      seed.forEach(s => {
+        const r = byId.get(s.id);
+        if (!r || r.en !== s.en) return;              // 내가 고친 문장·다른 문장은 건드리지 않는다
+        const addAlts = (s.alts || []).filter(a => !(r.alts || []).includes(a));
+        if (r.ko === s.ko && r.sub === s.sub && r.grp === s.grp && !addAlts.length) return;
+        r.ko = s.ko; r.sub = s.sub; r.grp = s.grp;
+        if (addAlts.length) r.alts = (r.alts || []).concat(addAlts);
+        edited.push(r);
+      });
+      if (edited.length) await Store.putSentences(edited);
     }
     recs.clear(); list.forEach(r => recs.set(r.id, r));
     // 저장된 값이 깨져 있어도 앱이 켜지게 한다
