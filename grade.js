@@ -124,6 +124,36 @@
     return ops.reverse();
   }
 
+  // ── 부탁·질문 머리말: 문장 맨 앞에서는 서로 바꿔 써도 맞는 것으로 본다 ──
+  // 같은 줄 안에서만 바꿔 준다 (can ↔ will 처럼 뜻이 달라지는 조합은 넣지 않는다)
+  const HEADS = [
+    [['can', 'you'], ['could', 'you']],
+    [['will', 'you'], ['would', 'you']],
+    [['can', 'i'], ['could', 'i'], ['may', 'i']],
+    [['can', 'we'], ['could', 'we']],
+    [['do', 'you'], ['would', 'you']],   // Do you mind / Would you mind
+  ];
+  // 뒤에 오는 말에 따라 뜻이 달라지는 것은 건드리지 않는다 (Would you like …)
+  const HEAD_STOP = new Set(['like']);
+
+  /** 정답과 같은 뜻으로 인정할 문장들 (머리말만 바꾼 것) */
+  function headVariants(answer) {
+    const T = tokenize(answer);
+    const toks = T.toks.map(x => x.t);
+    if (toks.length < 3 || HEAD_STOP.has(toks[2])) return [];
+    // 앞 두 단어가 각각 토큰 하나일 때만 (축약형이 끼면 건너뛴다)
+    if (T.words.length < 3 || T.toks[0].word !== 0 || T.toks[1].word !== 1) return [];
+    const grp = HEADS.find(g => g.some(h => h[0] === toks[0] && h[1] === toks[1]));
+    if (!grp) return [];
+    // 'do you mind' 와 'would you mind' 만 서로 인정한다
+    const mind = toks[2] === 'mind';
+    const rest = T.words.slice(2).map(w => w.disp).join(' ');
+    return grp
+      .filter(h => !(h[0] === toks[0] && h[1] === toks[1]))
+      .filter(h => (h[0] === 'do' || toks[0] === 'do') ? mind : true)
+      .map(h => h[0] + ' ' + h[1] + ' ' + rest);
+  }
+
   /**
    * 채점
    * @param {string} input   내 답
@@ -135,7 +165,7 @@
    *   userMarks / answerMarks: 표시용 단어별 표시 (true = 취소선 / 주황 배경)
    */
   function grade(input, answer, alts) {
-    const cands = [answer].concat(alts || []).filter(Boolean);
+    const cands = [answer].concat(headVariants(answer), alts || []).filter(Boolean);
     let best = null;
     for (const c of cands) {
       const r = gradeOne(input, c);
@@ -209,7 +239,7 @@
     return x.length === y.length && x.every((t, i) => tokEq(t, y[i]));
   }
 
-  const API = { grade, hint, tokenize, sameText, isSpellingPair, isInflection, charDist, displayWords };
+  const API = { grade, hint, tokenize, sameText, isSpellingPair, isInflection, charDist, displayWords, headVariants };
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
   else root.Grade = API;
 })(typeof window !== 'undefined' ? window : globalThis);

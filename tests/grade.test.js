@@ -82,6 +82,22 @@ test('다른 정답도 인정', () => {
   assert.equal(G.grade('Could you send me the doc?', 'Could you review the doc ahead of time?').correct, false);
 });
 
+test('부탁 머리말은 바꿔 써도 정답', () => {
+  ok('Could you expand on that?', 'Can you expand on that?');
+  ok('Can you expand on that?', 'Could you expand on that?');
+  ok('May I ask a quick question?', 'Can I ask a quick question?');
+  ok('Would you mind sending it again?', 'Do you mind sending it again?');
+  ok('Could we move the meeting to Friday?', 'Can we move the meeting to Friday?');
+  // 뒷부분이 틀리면 머리말을 바꿔도 여전히 틀린다
+  assert.equal(G.grade('Could you expand on this?', 'Can you expand on that?').correct, false);
+  // 뜻이 달라지는 조합은 인정하지 않는다
+  assert.equal(G.grade('Will you expand on that?', 'Can you expand on that?').correct, false);
+  assert.equal(G.grade('Could you like some coffee?', 'Would you like some coffee?').correct, false);
+  assert.equal(G.grade('Would you send it again?', 'Do you send it again?').correct, false);
+  // 문장 가운데의 can 은 그대로 (뜻이 달라진다)
+  assert.equal(G.grade('I could do it today.', 'I can do it today.').correct, false);
+});
+
 test('띄어쓰기만 다른 경우는 스펠링', () => {
   kind('I check it every day.', 'I check it everyday.', 'spell');
 });
