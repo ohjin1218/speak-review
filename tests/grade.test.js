@@ -133,6 +133,16 @@ test('같은 뜻으로 쓰는 표현은 통했어요', () => {
   kind('The bank robbers made away with a lot of money.', 'The bank robbers made off with a lot of money.', 'struct');
 });
 
+test('통째로 바꿔 써도 뜻이 통하는 말', () => {
+  kind("I want to take a week off.", "I'd like to take a week off.", 'minor');
+  kind("I'd like to take a week off.", 'I want to take a week off.', 'minor');
+  kind('We have to get rid of some furniture.', 'We need to get rid of some furniture.', 'minor');
+  kind("I'm going to get started.", "I'll get started.", 'minor');
+  kind("I'll get started.", "I'm going to get started.", 'minor');
+  // should 는 '~하는 게 좋겠어' 라 뜻이 다르다
+  kind('We should get rid of the broken chair.', 'We need to get rid of the broken chair.', 'struct');
+});
+
 test('Mind if 는 머리말을 붙이든 빼든 정답', () => {
   ok('Mind if we push the meeting to Monday?', 'Would you mind if we push the meeting to Monday?');
   ok('Do you mind if we push the meeting to Monday?', 'Would you mind if we push the meeting to Monday?');

@@ -182,10 +182,25 @@
   const MAKE = /^(make|makes|made|making)$/;
   const TIME_W = /^(day|days|week|weeks|month|months|monday|tuesday|wednesday|thursday|friday|saturday|sunday|time|pto|morning|afternoon|hour|hours)$/;
 
+  // 통째로 바꿔 써도 뜻이 통하는 말 (앞에 쓴 쪽이 원래 문장에 있을 때 뒤의 것도 인정)
+  // '~하는 게 좋겠어(should)' 는 뜻이 다르므로 need/have 와 묶지 않는다
+  const PHRASES = [
+    ["I'd like to", 'I want to'],
+    ['need to', 'have to'],
+    ["I'll", "I'm going to"],
+  ];
+
   function nearVariants(answer) {
     const W = displayWords(answer);
     const low = W.map(cleanWord);
     const out = [];
+    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/'/g, "['’]");
+    PHRASES.forEach(([a, b]) => {
+      [[a, b], [b, a]].forEach(([from, to]) => {
+        const re = new RegExp('\\b' + esc(from) + '\\b', 'i');
+        if (re.test(answer)) out.push({ text: answer.replace(re, m => /^[A-Z]/.test(m) ? to : to[0].toLowerCase() + to.slice(1)), right: from, wrong: to });
+      });
+    });
     const swap = (i, to, right) => {
       const v = W.slice();
       v[i] = W[i].replace(/^[A-Za-z']+/, m => /^[A-Z]/.test(m) ? to[0].toUpperCase() + to.slice(1) : to);
