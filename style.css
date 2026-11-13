@@ -95,10 +95,12 @@ textarea[readonly] { opacity: .75; }
 .verdict { font-weight: 700; font-size: 15px; }
 .verdict.ok { color: var(--ok); }
 .verdict.bad { color: var(--bad); }
+.verdict.pass { color: var(--accent); }
 .cmp { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; align-items: baseline; }
 .cmp .lab { font-size: 12px; color: var(--muted); white-space: nowrap; }
 .cmp .line { font-size: 17px; line-height: 1.6; word-break: break-word; }
 .cmp s { color: var(--bad); text-decoration-thickness: 2px; }
+.cmp u { text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
 .cmp mark { background: var(--soft); color: var(--accent); border-radius: 4px; padding: 0 2px; font-weight: 600; }
 .classify { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .classify .lab { font-size: 12px; color: var(--muted); margin-right: 2px; }

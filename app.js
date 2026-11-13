@@ -264,25 +264,39 @@
     card.hint = Math.min(2, card.hint + 1); render();
   }
 
+  // '통했어요' 한 줄 설명: 어떤 작은 말이 빠졌는지·더 들어갔는지
+  function minorText(minor) {
+    if (!minor || !minor.length) return '';
+    return minor.slice(0, 3).map(m =>
+      m.op === 'del' ? `'${m.word}' 빠뜨림` :
+      m.op === 'ins' ? `'${m.word}' 더 씀` : `'${m.typed}' → '${m.word}'`).join(', ');
+  }
+
   function resultHtml(rec) {
     const g = card.result;
+    const pass = card.outcome === 'pass';
     const ok = card.outcome === 'right' || card.outcome === 'alt';
-    const label = card.outcome === 'alt' ? '맞았어요 (다른 표현으로 저장)' : ok ? '맞았어요' :
+    const label = card.outcome === 'alt' ? '맞았어요 (다른 표현으로 저장)' : ok ? '맞았어요' : pass ? '통했어요' :
       card.outcome === 'spell' ? '스펠링 실수' : card.outcome === 'struct' ? '구조 실수' : '틀렸어요 (다시 볼 것에 넣지 않음)';
     const line = (words, marks, tag) => words.map((w, i) => marks[i] ? `<${tag}>${esc(w)}</${tag}>` : esc(w)).join(' ');
     const showCmp = !ok || card.outcome === 'alt' || g.matched !== rec.en;
     const cmp = card.gaveUp
       ? `<div class="cmp"><span class="lab">정답</span><span class="line">${esc(rec.en)}</span></div>`
       : `<div class="cmp">
-          <span class="lab">내 답</span><span class="line">${ok ? esc(card.input) : line(g.userWords, g.userMarks, 's') || '<span class="lab">(비어 있음)</span>'}</span>
-          <span class="lab">정답</span><span class="line">${ok ? esc(rec.en) : line(g.answerWords, g.answerMarks, 'mark')}</span>
+          <span class="lab">내 답</span><span class="line">${ok ? esc(card.input) : line(g.userWords, g.userMarks, pass ? 'u' : 's') || '<span class="lab">(비어 있음)</span>'}</span>
+          <span class="lab">${pass ? '원래 문장' : '정답'}</span><span class="line">${ok ? esc(rec.en) : line(g.answerWords, g.answerMarks, 'mark')}</span>
         </div>`;
     const wrongNow = !g.correct;
     const sel = k => card.outcome === k ? ' on' : '';
     return `
-      <div class="verdict ${ok ? 'ok' : 'bad'}">${label}</div>
+      <div class="verdict ${ok ? 'ok' : pass ? 'pass' : 'bad'}">${label}${pass ? ` — ${esc(minorText(g.minor))}` : ''}</div>
       ${showCmp || !ok ? cmp : `<div class="cmp"><span class="lab">정답</span><span class="line">${esc(rec.en)}</span></div>`}
-      ${wrongNow ? `<div class="classify">
+      ${pass ? `<div class="classify">
+        <span class="lab">틀린 걸로 할래요</span>
+        <button class="btn${sel('struct')}" data-out="struct">구조 실수</button>
+        <button class="btn${sel('spell')}" data-out="spell">스펠링 실수</button>
+      </div>` : ''}
+      ${wrongNow && !pass ? `<div class="classify">
         <span class="lab">분류</span>
         <button class="btn${sel('spell')}" data-out="spell">스펠링</button>
         <button class="btn${sel('struct')}" data-out="struct">구조</button>
@@ -310,7 +324,7 @@
     card.override = null;   // 분류를 다시 고르면 빼기/넣기 선택은 초기화
     saveRec(rec);
     card.outcome = outcome;
-    curRound().res[card.id] = outcome === 'right' || outcome === 'alt';
+    curRound().res[card.id] = outcome === 'right' || outcome === 'alt' || outcome === 'pass';
     saveRounds();
     render();
   }
@@ -323,7 +337,7 @@
     const rec = recs.get(card.id);
     const g = Grade.grade(card.input, rec.en, rec.alts);
     card.result = g;
-    setOutcome(g.correct ? 'right' : g.kind);
+    setOutcome(g.correct ? 'right' : g.kind === 'minor' ? 'pass' : g.kind);
   }
   function giveUp() {
     if (!card || card.result) return;
@@ -595,9 +609,10 @@
       }
     }
     recs.clear(); list.forEach(r => recs.set(r.id, r));
-    settings = Object.assign(settings, await Store.getMeta('settings', {}));
-    queues = await Store.getMeta('queues', {});
-    rounds = await Store.getMeta('rounds', {});
+    // 저장된 값이 깨져 있어도 앱이 켜지게 한다
+    settings = Object.assign(settings, await Store.getMeta('settings', {}) || {});
+    queues = await Store.getMeta('queues', {}) || {};
+    rounds = await Store.getMeta('rounds', {}) || {};
     lastBackup = await Store.getMeta('lastBackup', 0);
     card = null;
   }

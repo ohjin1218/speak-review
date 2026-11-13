@@ -24,13 +24,13 @@
   /**
    * 채점 결과를 기록에 반영한다. pre(채점 직전 기록)에서 다시 계산하므로
    * 사용자가 분류 버튼을 여러 번 바꿔 눌러도 결과가 꼬이지 않는다.
-   * outcome: 'right' | 'spell' | 'struct' | 'skip'(넣지 않기) | 'alt'(이것도 정답)
+   * outcome: 'right' | 'pass'(통했어요) | 'spell' | 'struct' | 'skip'(넣지 않기) | 'alt'(이것도 정답)
    */
   function applyOutcome(pre, outcome, opt) {
     opt = opt || {};
     const r = clone(pre);
     r.seen = opt.now || Date.now();
-    if (outcome === 'right' || outcome === 'alt') {
+    if (outcome === 'right' || outcome === 'alt' || outcome === 'pass') {
       r.right++; r.last = 'right';
       if (outcome === 'alt' && opt.alt && !r.alts.includes(opt.alt.trim())) r.alts.push(opt.alt.trim());
       return r;

@@ -51,10 +51,13 @@ test('철자 실수는 스펠링으로 분류하고 틀린 철자를 기록', ()
 });
 
 test('단어 누락·추가·다른 단어는 구조 실수', () => {
-  kind('I have lot of work to catch up on.', 'I have a lot of work to catch up on.', 'struct');   // 누락
-  kind('I have a lot of the work to catch up on.', 'I have a lot of work to catch up on.', 'struct'); // 추가
+  kind('I have a lot of work to catch on.', 'I have a lot of work to catch up on.', 'struct');   // 누락
+  kind('I have a lot of work to catch up on today.', 'I have a lot of work to catch up on.', 'struct'); // 추가
   kind('I have a lot of job to catch up on.', 'I have a lot of work to catch up on.', 'struct');  // 다른 단어
   kind('', 'We are on track.', 'struct');
+  // 관사만 빠지거나 더 들어간 것은 구조 실수가 아니라 '통했어요'
+  kind('I have lot of work to catch up on.', 'I have a lot of work to catch up on.', 'minor');
+  kind('I have a lot of the work to catch up on.', 'I have a lot of work to catch up on.', 'minor');
 });
 
 test('단수·복수와 동사 어미 차이는 구조 실수', () => {
@@ -96,6 +99,49 @@ test('부탁 머리말은 바꿔 써도 정답', () => {
   assert.equal(G.grade('Would you send it again?', 'Do you send it again?').correct, false);
   // 문장 가운데의 can 은 그대로 (뜻이 달라진다)
   assert.equal(G.grade('I could do it today.', 'I can do it today.').correct, false);
+});
+
+test('관사·군더더기 말만 다르면 통했어요', () => {
+  kind('Can you send me report by Friday?', 'Can you send me the report by Friday?', 'minor');
+  kind('Can you send me a report by Friday?', 'Can you send me the report by Friday?', 'minor');
+  kind('Can you send me the report by Friday?', 'Can you send me report by Friday?', 'minor');
+  kind('Could you please share the agenda?', 'Could you share the agenda?', 'minor');
+  kind('I just need a minute.', 'I need a minute.', 'minor');
+  // 빠뜨린 말이 무엇인지 알려준다
+  assert.deepEqual(kind('Can you share agenda?', 'Can you share the agenda?', 'minor').minor,
+    [{ op: 'del', word: 'the', typed: null }]);
+  // 오타가 같이 있으면 오타 쪽이 더 중요하므로 스펠링
+  kind('Can you send me teh report by Friday?', 'Can you send me the report by Friday?', 'spell');
+  // 뜻이 달라지는 말은 그대로 구조 실수
+  kind('Can you send me my report by Friday?', 'Can you send me the report by Friday?', 'struct');
+});
+
+test('같은 뜻으로 쓰는 표현은 통했어요', () => {
+  // 휴가: take ~ off ↔ get ~ off (사이에 시간을 나타내는 말이 있을 때만)
+  kind('I wish I could take some time off next week.', 'I wish I could get some time off next week.', 'minor');
+  kind('He took Wednesday off to take care of his kids.', 'He got Wednesday off to take care of his kids.', 'minor');
+  // 도망가다: made away ↔ made off
+  kind('The robbers made off after the police arrived.', 'The robbers made away after the police arrived.', 'minor');
+  // 차근차근 설명하다: walk ~ through ↔ take ~ through
+  kind('Could you take me through the program?', 'Could you walk me through the program?', 'minor');
+  kind('Can you walk us through the sales figures?', 'Can you take us through the sales figures?', 'minor');
+
+  // 뜻이 달라지는 자리는 그대로 틀린다
+  kind('I hope my new book gets off.', 'I hope my new book takes off.', 'struct');            // 성공하다
+  kind('The robber took off without jail time.', 'The robber got off without jail time.', 'struct');  // 처벌을 면하다
+  kind('The company decided to make off with free coffee.', 'The company decided to make away with free coffee.', 'struct');  // 없애다
+  kind('The bank robbers made away with a lot of money.', 'The bank robbers made off with a lot of money.', 'struct');
+});
+
+test('Mind if 는 머리말을 붙이든 빼든 정답', () => {
+  ok('Mind if we push the meeting to Monday?', 'Would you mind if we push the meeting to Monday?');
+  ok('Do you mind if we push the meeting to Monday?', 'Would you mind if we push the meeting to Monday?');
+  ok('Would you mind if I jump in?', 'Mind if I jump in?');
+  ok('Do you mind if I jump in?', 'Mind if I jump in?');
+  // 'will you mind' 는 쓰지 않는 말이라 인정하지 않는다
+  assert.equal(G.grade('Will you mind if we push the meeting to Monday?', 'Would you mind if we push the meeting to Monday?').correct, false);
+  // make up one's mind 는 건드리지 않는다
+  assert.equal(G.grade('Do you made up your mind about what to do?', 'Have you made up your mind about what to do?').correct, false);
 });
 
 test('띄어쓰기만 다른 경우는 스펠링', () => {

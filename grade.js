@@ -124,6 +124,14 @@
     return ops.reverse();
   }
 
+  // ── 뜻을 거의 바꾸지 않는 작은 말: 빠뜨리거나 더 쓰거나 서로 바꿔 써도 '통했어요' ──
+  const SMALL = new Set(['a', 'an', 'the', 'please', 'just', 'maybe']);
+  function isSmallOp(o, et, gt) {
+    if (o.op === 'del') return SMALL.has(et[o.e]);                        // 정답에 있는데 안 씀
+    if (o.op === 'ins') return SMALL.has(gt[o.g]);                        // 정답에 없는데 씀
+    return SMALL.has(et[o.e]) && SMALL.has(gt[o.g]);                      // a ↔ the 처럼 바꿔 씀
+  }
+
   // ── 부탁·질문 머리말: 문장 맨 앞에서는 서로 바꿔 써도 맞는 것으로 본다 ──
   // 같은 줄 안에서만 바꿔 준다 (can ↔ will 처럼 뜻이 달라지는 조합은 넣지 않는다)
   const HEADS = [
@@ -131,8 +139,9 @@
     [['will', 'you'], ['would', 'you']],
     [['can', 'i'], ['could', 'i'], ['may', 'i']],
     [['can', 'we'], ['could', 'we']],
-    [['do', 'you'], ['would', 'you']],   // Do you mind / Would you mind
   ];
+  // mind 앞에서는 Do you / Would you 만 서로 바꿔 쓴다 ('will you mind' 는 쓰지 않는 말)
+  const MIND_HEADS = [['do', 'you'], ['would', 'you']];
   // 뒤에 오는 말에 따라 뜻이 달라지는 것은 건드리지 않는다 (Would you like …)
   const HEAD_STOP = new Set(['like']);
 
@@ -143,15 +152,65 @@
     if (toks.length < 3 || HEAD_STOP.has(toks[2])) return [];
     // 앞 두 단어가 각각 토큰 하나일 때만 (축약형이 끼면 건너뛴다)
     if (T.words.length < 3 || T.toks[0].word !== 0 || T.toks[1].word !== 1) return [];
-    const grp = HEADS.find(g => g.some(h => h[0] === toks[0] && h[1] === toks[1]));
-    if (!grp) return [];
-    // 'do you mind' 와 'would you mind' 만 서로 인정한다
     const mind = toks[2] === 'mind';
+    const grp = (mind ? [MIND_HEADS] : HEADS).find(g => g.some(h => h[0] === toks[0] && h[1] === toks[1]));
+    if (!grp) return [];
     const rest = T.words.slice(2).map(w => w.disp).join(' ');
-    return grp
+    const out = grp
       .filter(h => !(h[0] === toks[0] && h[1] === toks[1]))
-      .filter(h => (h[0] === 'do' || toks[0] === 'do') ? mind : true)
       .map(h => h[0] + ' ' + h[1] + ' ' + rest);
+    // Do you mind if … / Would you mind if … 는 머리말 없이 Mind if … 로도 쓴다
+    if (mind) out.push(rest);
+    return out;
+  }
+
+  /** 머리말 없는 'Mind if …' 에는 'Do you mind if …' 와 'Would you mind if …' 도 인정 */
+  function bareMindVariants(answer) {
+    const T = tokenize(answer);
+    const toks = T.toks.map(x => x.t);
+    if (toks[0] !== 'mind' || toks[1] !== 'if' || T.toks[0].word !== 0) return [];
+    const rest = T.words.map(w => w.disp).join(' ');
+    return ['do you ' + rest, 'would you ' + rest];
+  }
+
+  // ── 같은 뜻으로 쓰는 표현: 바꿔 써도 '통했어요' (원래 문장은 화면에 보여준다) ──
+  // 뜻이 갈리는 자리는 일부러 뺐다 (made off with = 훔쳐 가다 ≠ made away with = 없애다)
+  const OFF_PAIR = { take: 'get', takes: 'gets', took: 'got', taking: 'getting',
+    get: 'take', gets: 'takes', got: 'took', getting: 'taking' };
+  const THRU_PAIR = { walk: 'take', walks: 'takes', walked: 'took', walking: 'taking',
+    take: 'walk', takes: 'walks', took: 'walked', taking: 'walking' };
+  const MAKE = /^(make|makes|made|making)$/;
+  const TIME_W = /^(day|days|week|weeks|month|months|monday|tuesday|wednesday|thursday|friday|saturday|sunday|time|pto|morning|afternoon|hour|hours)$/;
+
+  function nearVariants(answer) {
+    const W = displayWords(answer);
+    const low = W.map(cleanWord);
+    const out = [];
+    const swap = (i, to, right) => {
+      const v = W.slice();
+      v[i] = W[i].replace(/^[A-Za-z']+/, m => /^[A-Z]/.test(m) ? to[0].toUpperCase() + to.slice(1) : to);
+      out.push({ text: v.join(' '), right, wrong: to });
+    };
+    for (let i = 0; i < low.length; i++) {
+      const w = low[i];
+      // 휴가: take the day off ↔ get the day off (사이에 시간을 나타내는 말이 있을 때만)
+      if (OFF_PAIR[w]) {
+        for (let j = i + 1; j <= Math.min(i + 5, low.length - 1); j++) {
+          if (low[j] === 'off') {
+            if (low.slice(i + 1, j).some(x => TIME_W.test(x))) swap(i, OFF_PAIR[w], w);
+            break;
+          }
+        }
+      }
+      // 차근차근 설명하다: walk me through ↔ take me through
+      if (THRU_PAIR[w] && low.slice(i + 1, i + 4).indexOf('through') >= 0) swap(i, THRU_PAIR[w], w);
+      // 도망가다: made away ↔ made off (뒤에 with/of 가 붙으면 뜻이 달라지므로 제외)
+      if (MAKE.test(w) && (low[i + 1] === 'away' || low[i + 1] === 'off') &&
+          low[i + 2] !== 'with' && low[i + 2] !== 'of') {
+        swap(i + 1, low[i + 1] === 'away' ? 'off' : 'away', low[i + 1]);
+      }
+    }
+    return out;
   }
 
   /**
@@ -165,7 +224,7 @@
    *   userMarks / answerMarks: 표시용 단어별 표시 (true = 취소선 / 주황 배경)
    */
   function grade(input, answer, alts) {
-    const cands = [answer].concat(headVariants(answer), alts || []).filter(Boolean);
+    const cands = [answer].concat(headVariants(answer), bareMindVariants(answer), alts || []).filter(Boolean);
     let best = null;
     for (const c of cands) {
       const r = gradeOne(input, c);
@@ -175,7 +234,17 @@
     }
     // 다른 정답보다 원래 정답과 비교한 결과를 보여주는 게 자연스럽다 (차이가 크지 않으면)
     const main = gradeOne(input, answer); main.matched = answer;
-    return main.cost <= best.cost + 0.5 ? main : best;
+    const res = main.cost <= best.cost + 0.5 ? main : best;
+    // 같은 뜻으로 쓰는 다른 표현을 썼으면 '통했어요'
+    if (!res.correct && res.kind !== 'minor') {
+      const near = nearVariants(answer).find(v => gradeOne(input, v.text).correct);
+      if (near) {
+        main.kind = 'minor';
+        main.minor = [{ op: 'sub', word: near.right, typed: near.wrong }];
+        return main;
+      }
+    }
+    return res;
   }
 
   function gradeOne(input, answer) {
@@ -205,9 +274,18 @@
       res.spell = mergePairs(bad, E, G);
       return res;
     }
-    const allSpell = bad.length > 0 && bad.every(o => o.op === 'sub' && isSpellingPair(gt[o.g], et[o.e]));
+    // 관사·군더더기 말만 다르면 '통했어요' (뜻은 통한다)
+    res.minor = bad.filter(o => isSmallOp(o, et, gt)).map(o => ({
+      op: o.op,                                       // del = 빠뜨림, ins = 더 씀, sub = 바꿔 씀
+      word: o.op === 'ins' ? gt[o.g] : et[o.e],       // 정답 쪽 말 (ins 면 내가 더 쓴 말)
+      typed: o.op === 'sub' ? gt[o.g] : null,         // 바꿔 쓴 경우 내가 쓴 말
+    }));
+    const rest = bad.filter(o => !isSmallOp(o, et, gt));
+    if (!rest.length) { res.kind = 'minor'; return res; }
+    // 오타와 관사가 같이 틀렸으면 오타 쪽이 더 중요한 신호다 → 스펠링
+    const allSpell = rest.every(o => o.op === 'sub' && isSpellingPair(gt[o.g], et[o.e]));
     res.kind = allSpell ? 'spell' : 'struct';
-    res.spell = bad.filter(o => o.op === 'sub' && isSpellingPair(gt[o.g], et[o.e])).map(pair);
+    res.spell = rest.filter(o => o.op === 'sub' && isSpellingPair(gt[o.g], et[o.e])).map(pair);
     return res;
   }
 
@@ -239,7 +317,7 @@
     return x.length === y.length && x.every((t, i) => tokEq(t, y[i]));
   }
 
-  const API = { grade, hint, tokenize, sameText, isSpellingPair, isInflection, charDist, displayWords, headVariants };
+  const API = { grade, hint, tokenize, sameText, isSpellingPair, isInflection, charDist, displayWords, headVariants, nearVariants };
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
   else root.Grade = API;
 })(typeof window !== 'undefined' ? window : globalThis);
