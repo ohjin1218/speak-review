@@ -110,6 +110,11 @@
   function render() {
     // 모드
     document.querySelectorAll('#modeSeg button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === settings.mode)));
+    // 에피소드 모드: 문장 복습 화면을 숨기고 에피소드 화면을 보인다
+    const epMode = settings.mode === 'ep';
+    ['#tabs', '#chips', '.progress', '#card', '#foot'].forEach(q => { $(q).hidden = epMode; });
+    if (epMode) { if (window.EpApp) EpApp.show(); return; }
+    if (window.EpApp) EpApp.hide();
     // 탭
     const counts = { today: null, review: all().filter(r => r.review).length };
     Logic.DECKS.forEach(d => { counts[d] = all().filter(r => r.deck === d).length; });
@@ -379,7 +384,7 @@
 
   // ── 키보드 ──
   document.addEventListener('keydown', e => {
-    if (!$('#manage').hidden) return;
+    if (!$('#manage').hidden || settings.mode === 'ep') return;
     if (e.isComposing || e.keyCode === 229) return;          // 한글 조합 중 Enter 무시
     const r = curRound();
     const finished = r.pos >= r.ids.length;

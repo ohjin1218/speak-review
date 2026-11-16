@@ -19,6 +19,7 @@
     <div class="seg" id="modeSeg" role="tablist" aria-label="연습 방식">
       <button data-mode="speak" role="tab">말하기</button>
       <button data-mode="type" role="tab">타이핑</button>
+      <button data-mode="ep" role="tab">에피소드</button>
     </div>
     <button class="icon-btn" id="openManage" aria-label="문장 관리">⚙</button>
   </header>
@@ -45,6 +46,7 @@
   <main id="card" class="card"></main>
 
   <footer class="foot" id="foot"></footer>
+  <section id="ep" class="ep" hidden></section>
 </div>
 
 <section id="manage" class="manage" hidden>
@@ -88,6 +90,12 @@
 <script src="grade.js"></script>
 <script src="logic.js"></script>
 <script src="store.js"></script>
+<script src="episode/rules.js"></script>
+<script src="episode/topics.js"></script>
+<script src="episode/ep-core.js"></script>
+<script src="episode/ep-store.js"></script>
+<script src="episode/drive.js"></script>
+<script src="episode/ep-app.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

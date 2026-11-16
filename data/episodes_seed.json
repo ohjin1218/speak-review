@@ -1,0 +1,216 @@
+{
+  "format": "speak-episodes/1",
+  "source": "오픽 답변 에피소드 (스픽 저장 문장 활용) 문서, 2026-11-16",
+  "episodes": [
+    {
+      "id": "ep-intro", "topic": "자기소개", "kind": "opic",
+      "question": { "en": "Let's start the interview now. Tell me something about yourself.", "ko": "이제 인터뷰를 시작하겠습니다. 자신에 대해 말해 주세요." },
+      "lines": [
+        { "en": "Hi, my name is Jinwoo Oh.", "ko": "안녕하세요, 제 이름은 오진우입니다." },
+        { "en": "I work for Hanwha Ocean, and right now I'm based at our shipyard in Philadelphia.", "ko": "저는 한화오션에서 일하고 있고, 지금은 필라델피아에 있는 저희 조선소에서 근무합니다." },
+        { "en": "I recently took on a new project.", "ko": "최근에 새 프로젝트를 맡았습니다." },
+        { "en": "We're expanding the shipyard.", "ko": "조선소를 확장하고 있어요." },
+        { "en": "I mainly manage contracts.", "ko": "저는 주로 계약을 관리합니다." },
+        { "en": "I also keep track of progress and risks.", "ko": "진행 상황과 리스크도 챙깁니다." },
+        { "en": "To be honest, I have a lot on my plate these days.", "ko": "솔직히 요즘은 할 일이 너무 많아요." },
+        { "en": "Everything is new, the people, the rules, even the way meetings run.", "ko": "사람도, 규칙도, 회의하는 방식까지 다 새롭거든요." },
+        { "en": "But I'm slowly getting the hang of it.", "ko": "그래도 조금씩 감을 잡아가고 있습니다." },
+        { "en": "I live in Bala Cynwyd with my family, just outside the city.", "ko": "저는 도심 바로 밖 발라신윈드에서 가족과 함께 살고 있습니다." },
+        { "en": "On weekends I try to take it easy and spend time with them.", "ko": "주말에는 쉬엄쉬엄 가족과 시간을 보내려고 합니다." },
+        { "en": "That's a little bit about me.", "ko": "제 소개는 여기까지입니다." }
+      ]
+    },
+    {
+      "id": "ep-home", "topic": "사는 곳", "kind": "opic",
+      "question": { "en": "Tell me about the place where you live. What does your home look like?", "ko": "사는 곳에 대해 말해 주세요. 집은 어떻게 생겼나요?" },
+      "lines": [
+        { "en": "I live in an apartment in Bala Cynwyd, a quiet town right outside Philadelphia.", "ko": "저는 필라델피아 바로 옆의 조용한 동네인 발라신윈드의 아파트에 살고 있습니다." },
+        { "en": "We moved in this May, so it still feels pretty new.", "ko": "올해 5월에 이사해서 아직도 꽤 새집 같아요." },
+        { "en": "It's a newer building, so everything is clean and bright.", "ko": "지은 지 얼마 안 된 건물이라 전부 깨끗하고 밝습니다." },
+        { "en": "When we first moved in, we bought a big desk for the living room.", "ko": "처음 이사 왔을 때 거실에 둘 큰 책상을 샀어요." },
+        { "en": "But honestly, the new desk takes up too much space in the room.", "ko": "그런데 솔직히 새 책상이 방에서 너무 많은 공간을 차지해요." },
+        { "en": "So I think we need to get rid of some furniture.", "ko": "그래서 가구를 좀 치워야 할 것 같아요." },
+        { "en": "The best part is the neighborhood.", "ko": "가장 좋은 건 동네입니다." },
+        { "en": "There are lots of trees, and in the fall the colors are amazing.", "ko": "나무가 많아서 가을이면 색깔이 정말 멋져요." },
+        { "en": "I still can't get over this view.", "ko": "아직도 이 경치가 믿기지 않아요." },
+        { "en": "Commuting to work takes up a lot of time in the morning.", "ko": "아침에 출근하는 데 시간이 꽤 걸려요." },
+        { "en": "But I don't mind, because coming home to this place feels great.", "ko": "하지만 이런 집으로 돌아오는 게 좋아서 괜찮습니다." }
+      ]
+    },
+    {
+      "id": "ep-day", "topic": "직장과 하루 일과", "kind": "opic",
+      "question": { "en": "Describe a typical day at work. What do you usually do?", "ko": "평소 회사에서의 하루를 설명해 주세요. 보통 무엇을 하나요?" },
+      "lines": [
+        { "en": "My day starts early.", "ko": "제 하루는 일찍 시작합니다." },
+        { "en": "When I get to the office, I have a lot of emails to catch up on.", "ko": "사무실에 도착하면 밀린 이메일이 많아요." },
+        { "en": "That's because the head office in Korea works while we sleep.", "ko": "우리가 자는 동안 한국 본사가 일하기 때문이죠." },
+        { "en": "Honestly, reading emails makes up most of my morning.", "ko": "솔직히 이메일 읽는 게 아침 시간의 대부분을 차지합니다." },
+        { "en": "After that, I check what's on the schedule for this week.", "ko": "그다음 이번 주 일정을 확인합니다." },
+        { "en": "Then I sync up with my team.", "ko": "그리고 팀과 상황을 맞춥니다." },
+        { "en": "I need to stay on top of the project schedule.", "ko": "프로젝트 일정을 놓치지 않고 파악해야 해요." },
+        { "en": "So I compare the plan with the actual progress every day.", "ko": "그래서 매일 계획과 실제 진행을 비교합니다." },
+        { "en": "If something is running behind schedule, I flag it early and look into the issue.", "ko": "뭔가 일정보다 늦어지면 일찍 알리고 문제를 살펴봅니다." },
+        { "en": "In the afternoon, I usually have meetings with our partners.", "ko": "오후에는 보통 협력사들과 회의를 합니다." },
+        { "en": "I normally get off work around seven.", "ko": "보통 7시쯤 퇴근합니다." },
+        { "en": "It's a long day, but I like that every day is different.", "ko": "긴 하루지만 매일이 다르다는 점이 좋습니다." }
+      ]
+    },
+    {
+      "id": "ep-problem", "topic": "프로젝트 경험", "kind": "opic",
+      "question": { "en": "Tell me about a problem you had at work. What happened, and how did you solve it?", "ko": "회사에서 겪었던 문제에 대해 말해 주세요. 무슨 일이 있었고, 어떻게 해결했나요?" },
+      "lines": [
+        { "en": "A few months ago, we ran into some issues with the vendor.", "ko": "몇 달 전에 공급업체와 문제가 좀 있었습니다." },
+        { "en": "Their drawings kept coming in late.", "ko": "도면이 계속 늦게 들어왔어요." },
+        { "en": "We were running a couple of weeks behind schedule.", "ko": "일정이 2주 정도 뒤처졌습니다." },
+        { "en": "My boss was not happy with it, of course.", "ko": "당연히 상사도 마음에 들어 하지 않았죠." },
+        { "en": "First, I looked into the issue to identify the root cause.", "ko": "먼저 근본 원인을 찾기 위해 문제를 살펴봤습니다." },
+        { "en": "It turned out the vendor simply had too much on their plate.", "ko": "알고 보니 그 업체가 맡은 일이 너무 많았던 거예요." },
+        { "en": "So I set up a meeting, and we ironed out the details.", "ko": "그래서 회의를 잡고 세부사항을 조율했습니다." },
+        { "en": "In the end, we met halfway by splitting the work into two parts.", "ko": "결국 작업을 두 부분으로 나누는 선에서 절충했어요." },
+        { "en": "To avoid any delays, we also agreed to touch base every week.", "ko": "지연을 막기 위해 매주 확인차 연락하기로도 했습니다." },
+        { "en": "Now we're back on track.", "ko": "지금은 다시 정상 궤도로 돌아왔습니다." },
+        { "en": "There were some takeaways along the way.", "ko": "그 과정에서 느낀 점도 있었어요." },
+        { "en": "The biggest one is to flag problems sooner.", "ko": "가장 큰 건 문제를 더 일찍 알려야 한다는 것입니다." }
+      ]
+    },
+    {
+      "id": "ep-meeting", "topic": "회의", "kind": "opic",
+      "question": { "en": "Tell me about a memorable meeting you had recently.", "ko": "최근에 했던 기억에 남는 회의에 대해 말해 주세요." },
+      "lines": [
+        { "en": "Last month, we had a big meeting with our partner about the schedule.", "ko": "지난달에 협력사와 일정에 대해 큰 회의를 했습니다." },
+        { "en": "Before the meeting, I wrote up an agenda.", "ko": "회의 전에 제가 안건을 작성했어요." },
+        { "en": "I asked everyone to review it ahead of time.", "ko": "모두에게 미리 검토해 달라고 했습니다." },
+        { "en": "I started off with a quick overview of our numbers.", "ko": "저는 우리 수치에 대한 짧은 개요로 시작했어요." },
+        { "en": "Then the partner said, \"Don't you think the deadline is too tight?\"", "ko": "그러자 협력사가 \"마감이 너무 빠듯하다고 생각하지 않으세요?\"라고 했어요." },
+        { "en": "I answered, \"That's a valid concern, but I think it's still doable.\"", "ko": "저는 \"충분히 우려할 만하지만 여전히 해볼 만하다고 생각합니다\"라고 답했습니다." },
+        { "en": "After that, people got a bit sidetracked.", "ko": "그 뒤에 이야기가 좀 옆길로 샜어요." },
+        { "en": "So I said, \"Let's focus on the issues at hand.\"", "ko": "그래서 \"지금 당면한 문제에 집중합시다\"라고 했습니다." },
+        { "en": "Can we table that topic for the next meeting?", "ko": "그 주제는 다음 회의에서 얘기해도 될까요?" },
+        { "en": "In the end, we were mostly aligned on the project goals.", "ko": "결국 프로젝트 목표에 대해 대부분 의견이 일치했습니다." },
+        { "en": "Before we wrapped up, we went over the next steps.", "ko": "마무리하기 전에 다음 단계를 정리했습니다." },
+        { "en": "It was long, but I felt proud of how I handled it.", "ko": "길었지만 제가 잘 이끌었다는 생각에 뿌듯했습니다." }
+      ]
+    },
+    {
+      "id": "ep-gym", "topic": "운동(헬스, 골프)", "kind": "opic",
+      "question": { "en": "You indicated that you go to the gym. Tell me about your workout routine.", "ko": "헬스장에 다닌다고 하셨는데요. 운동 루틴에 대해 말해 주세요." },
+      "lines": [
+        { "en": "I go to a gym near my apartment.", "ko": "저는 집 근처 헬스장에 다닙니다." },
+        { "en": "I like working out alone, because I can take it slow and focus on myself.", "ko": "혼자 운동하는 걸 좋아하는데, 천천히 제 페이스대로 집중할 수 있기 때문입니다." },
+        { "en": "On weekdays, I block out an hour after work.", "ko": "평일에는 퇴근 후 한 시간을 미리 빼 둡니다." },
+        { "en": "On busy days, I just say, \"I can squeeze that in today,\" and do thirty minutes.", "ko": "바쁜 날에는 \"오늘도 짬을 낼 수 있어\"라고 하면서 30분만 합니다." },
+        { "en": "How do I handle stress?", "ko": "제가 스트레스를 어떻게 관리하느냐고요?" },
+        { "en": "This is the answer.", "ko": "이게 답입니다." },
+        { "en": "When work is tough, I tell myself, \"Don't let it get you down.\"", "ko": "일이 힘들 때는 \"그것 때문에 낙담하지 마\"라고 스스로에게 말해요." },
+        { "en": "Then I go lift some weights.", "ko": "그리고 운동을 하러 갑니다." },
+        { "en": "These days, I want to take up golf, too.", "ko": "요즘은 골프도 배우고 싶어요." },
+        { "en": "A lot of people here play it.", "ko": "여기는 골프 치는 사람이 많아요." },
+        { "en": "It's a good way to get together with coworkers.", "ko": "동료들과 어울리기에도 좋은 방법이에요." }
+      ]
+    },
+    {
+      "id": "ep-trip", "topic": "여행(국내·해외)", "kind": "opic",
+      "question": { "en": "Tell me about a trip you took recently. Where did you go, and what did you do?", "ko": "최근에 다녀온 여행에 대해 말해 주세요. 어디에 가서 무엇을 했나요?" },
+      "lines": [
+        { "en": "This summer, I took a few days off and went to Washington, D.C. with my family.", "ko": "이번 여름에 며칠 휴가를 내서 가족과 워싱턴 DC에 다녀왔습니다." },
+        { "en": "It's only a few hours from Philadelphia, so we drove.", "ko": "필라델피아에서 몇 시간밖에 안 걸려서 차로 갔어요." },
+        { "en": "There were so many museums and monuments.", "ko": "박물관과 기념물이 정말 많았습니다." },
+        { "en": "It took me hours to take in the sights, but nobody got bored.", "ko": "구경하는 데 몇 시간이 걸렸지만 아무도 지루해하지 않았어요." },
+        { "en": "On the second day, we came across a cute café near the National Mall.", "ko": "둘째 날에는 내셔널 몰 근처에서 귀여운 카페를 우연히 발견했어요." },
+        { "en": "That turned out to be our favorite spot.", "ko": "그곳이 제일 좋아하는 곳이 됐습니다." },
+        { "en": "The trip went by too quickly.", "ko": "여행이 너무 빨리 지나갔어요." },
+        { "en": "I still can't get over how fast time flies.", "ko": "시간이 얼마나 빨리 가는지 아직도 믿기지 않아요." },
+        { "en": "Next time, I want to take a week off and go somewhere farther, maybe the Grand Canyon.", "ko": "다음에는 일주일 휴가를 내서 그랜드캐니언 같은 더 먼 곳에 가고 싶습니다." }
+      ]
+    },
+    {
+      "id": "ep-rp-gym", "topic": "질문 3~4개 하기", "kind": "roleplay",
+      "question": { "en": "You want to join a new gym. Call the gym and ask three or four questions.", "ko": "새 헬스장에 등록하려고 합니다. 헬스장에 전화해서 질문 서너 개를 하세요." },
+      "lines": [
+        { "en": "Hi, I'm calling about a membership.", "ko": "안녕하세요, 회원권 때문에 전화드렸습니다." },
+        { "en": "I was just wondering.", "ko": "궁금한 게 있는데요." },
+        { "en": "What kind of plans do you have?", "ko": "어떤 요금제가 있나요?" },
+        { "en": "Also, could you walk me through the sign up process?", "ko": "그리고 가입 절차를 차근차근 설명해 주실 수 있나요?" },
+        { "en": "I'd like to come in this week.", "ko": "이번 주에 방문하고 싶은데요." },
+        { "en": "What's your availability on Monday?", "ko": "월요일에 가능한 시간이 언제인가요?" },
+        { "en": "And would it be possible to set up a free trial session?", "ko": "그리고 무료 체험 수업을 잡아 주실 수 있을까요?" },
+        { "en": "One more thing.", "ko": "하나 더요." },
+        { "en": "I saw a discount on your website.", "ko": "홈페이지에서 할인을 봤는데요." },
+        { "en": "Does that apply to family members as well?", "ko": "가족에게도 적용되나요?" },
+        { "en": "Could you please let me know by Friday?", "ko": "금요일까지 알려 주실 수 있나요?" },
+        { "en": "Thank you so much.", "ko": "정말 감사합니다." }
+      ]
+    },
+    {
+      "id": "ep-rp-dinner", "topic": "문제 설명하고 대안 제시", "kind": "roleplay",
+      "question": { "en": "You made dinner plans with a friend tonight, but something came up at work. Call your friend, explain the situation, and suggest two or three alternatives.", "ko": "오늘 밤 친구와 저녁 약속이 있는데 회사에 일이 생겼습니다. 친구에게 전화해서 상황을 설명하고 대안을 두세 개 제시하세요." },
+      "lines": [
+        { "en": "Hey, it's me.", "ko": "나야." },
+        { "en": "I'm so sorry, but a problem came up last minute.", "ko": "정말 미안한데 막판에 문제가 생겼어." },
+        { "en": "My meeting is running over.", "ko": "회의가 늦어지고 있어." },
+        { "en": "And honestly, I have too much on my plate today.", "ko": "그리고 솔직히 오늘 할 일이 너무 많아." },
+        { "en": "Sorry, but can I take a rain check?", "ko": "미안한데 다음에 해도 될까?" },
+        { "en": "Let me give you some options.", "ko": "몇 가지 제안해 볼게." },
+        { "en": "We could either meet this Friday or have brunch on Saturday.", "ko": "이번 금요일에 만나거나 토요일에 브런치를 해도 돼." },
+        { "en": "Or, what if we meet halfway?", "ko": "아니면 중간에서 절충하면 어때?" },
+        { "en": "I could come to your place after work tomorrow, and we can order chicken.", "ko": "내일 퇴근하고 내가 너희 집으로 가서 치킨 시켜 먹어도 되고." },
+        { "en": "Are you down for some chicken and beer?", "ko": "치맥 어때?" },
+        { "en": "I feel really bad about this.", "ko": "정말 미안해." },
+        { "en": "I'll make it up to you, I promise.", "ko": "꼭 보답할게, 약속해." },
+        { "en": "Just ping me when you're free.", "ko": "시간 될 때 그냥 메시지 하나 보내줘." }
+      ]
+    },
+    {
+      "id": "ep-rp-coworker", "topic": "질문 3~4개 하기", "kind": "roleplay",
+      "question": { "en": "You run into a coworker you haven't seen for a while. Ask three or four questions about what they've been up to.", "ko": "오랫동안 못 본 동료를 우연히 만났습니다. 요즘 어떻게 지냈는지 질문 서너 개를 하세요." },
+      "lines": [
+        { "en": "Hey, long time no see!", "ko": "와, 오랜만이에요!" },
+        { "en": "How 'bout we grab some coffee and chat a bit?", "ko": "커피 한잔 하면서 얘기 좀 할까요?" },
+        { "en": "I have a few minutes before my next meeting.", "ko": "다음 회의까지 몇 분 있어요." },
+        { "en": "So, what's been on your plate recently?", "ko": "그래서, 요즘 어떤 일을 하셨어요?" },
+        { "en": "I heard your team is really busy these days.", "ko": "팀이 요즘 정말 바쁘다고 들었어요." },
+        { "en": "Oh, and how was that conference you told me about?", "ko": "아, 그리고 말씀하신 컨퍼런스는 어땠어요?" },
+        { "en": "Did you learn anything useful there?", "ko": "거기서 쓸 만한 걸 좀 배우셨어요?" },
+        { "en": "Also, you look a little tired today.", "ko": "그리고 오늘 좀 피곤해 보이시네요." },
+        { "en": "What's been on your mind all morning?", "ko": "아침 내내 무슨 생각을 하셨어요?" },
+        { "en": "As for me, I'm doing well.", "ko": "저는 잘 지내요." },
+        { "en": "Last weekend, I took my family on a picnic, so I feel pretty good.", "ko": "지난 주말에 가족을 데리고 소풍을 다녀와서 기분이 꽤 좋아요." },
+        { "en": "Anyway, just ping me when you're free.", "ko": "아무튼 시간 될 때 메시지 주세요." },
+        { "en": "Let's grab lunch sometime.", "ko": "언제 점심 같이 해요." }
+      ]
+    },
+    {
+      "id": "ep-rp-news", "topic": "동료에게 소식 전하기", "kind": "roleplay",
+      "question": { "en": "Your manager asked you to pass along some news to a coworker. Call your coworker and give them the message.", "ko": "매니저가 동료에게 소식을 전해 달라고 했습니다. 동료에게 전화해서 메시지를 전하세요." },
+      "lines": [
+        { "en": "Hi Mike, it's Jinwoo.", "ko": "안녕하세요 Mike, 진우예요." },
+        { "en": "Sorry to bother you, but I have a couple of messages for you.", "ko": "방해해서 미안한데, 몇 가지 전할 말이 있어요." },
+        { "en": "First, Kelly told me to tell you to come in early tomorrow.", "ko": "먼저 Kelly가 저한테 내일 일찍 출근하시라고 전해달래요." },
+        { "en": "We have a site inspection at eight, and she wants you there.", "ko": "8시에 현장 점검이 있어서 오시길 바라세요." },
+        { "en": "Also, it's about the dinner with the vendor tonight.", "ko": "그리고 오늘 밤 공급업체와의 저녁 식사 건인데요." },
+        { "en": "Bob told me to tell you to put it on the company card.", "ko": "Bob이 저한테 비용을 회사 카드로 처리하시라고 전해달래요." },
+        { "en": "Just keep the receipt.", "ko": "영수증만 챙겨 두세요." },
+        { "en": "Oh, and one more thing.", "ko": "아, 하나 더요." },
+        { "en": "Have you heard Audrey is getting promoted?", "ko": "Audrey가 승진한다는 소식 들으셨어요?" },
+        { "en": "She's going to lead the planning team starting next month.", "ko": "다음 달부터 기획팀을 맡는대요." },
+        { "en": "Let's take her out for lunch sometime.", "ko": "언제 같이 점심 사 드려요." },
+        { "en": "Anyway, just ping me when you're free.", "ko": "아무튼 시간 될 때 메시지 주세요." }
+      ]
+    },
+    {
+      "id": "ep-anywhere", "topic": "어디에나 쓰는 문장", "kind": "set",
+      "lines": [
+        { "en": "I'd like to start off with a quick overview.", "ko": "짧게 개요부터 말씀드릴게요.", "tag": "시작" },
+        { "en": "Let me check on that.", "ko": "잠시 생각해 볼게요.", "tag": "시간 벌기" },
+        { "en": "I didn't quite catch that last part.", "ko": "마지막 부분을 잘 못 들었어요.", "tag": "질문 다시 듣기" },
+        { "en": "I see where you're coming from.", "ko": "왜 그렇게 생각하는지 이해돼요.", "tag": "상대 입장 인정" },
+        { "en": "That's a valid point, but I think it's still doable.", "ko": "일리 있지만 여전히 해볼 만해요.", "tag": "반대 의견" },
+        { "en": "At this point, ...", "ko": "현재로서는...", "tag": "현재 상황" },
+        { "en": "At the end of the day, ...", "ko": "결국에는...", "tag": "결론" },
+        { "en": "In a nutshell, ...", "ko": "요약하자면...", "tag": "요약" },
+        { "en": "There were some takeaways along the way.", "ko": "그 과정에서 느낀 점도 있었어요.", "tag": "경험 정리" },
+        { "en": "That's all from my end.", "ko": "제 얘기는 여기까지입니다.", "tag": "마무리" }
+      ]
+    }
+  ]
+}
