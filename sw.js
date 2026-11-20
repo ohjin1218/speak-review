@@ -1,6 +1,6 @@
 /* 오프라인용: 앱 파일을 기기에 저장해 두고 인터넷 없이도 켜지게 한다.
    앱 파일을 고치면 VERSION 숫자를 올린다. */
-const VERSION = 'speak-v7';
+const VERSION = 'speak-v8';
 const FILES = ['./', 'index.html', 'style.css', 'app.js', 'grade.js', 'logic.js', 'store.js', 'data.js',
   'manifest.webmanifest',
   'episode/rules.js', 'episode/topics.js', 'episode/ep-core.js', 'episode/ep-store.js', 'episode/drive.js', 'episode/ep-app.js',
